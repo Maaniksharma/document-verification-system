@@ -17,7 +17,6 @@ export function parseExcelFile(file: File): Promise<any[]> {
                 const worksheet = workbook.Sheets[sheetName];
 
                 const jsonData = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
-                console.log(jsonData);
                 resolve(jsonData);
             } catch (err) {
                 reject(err);

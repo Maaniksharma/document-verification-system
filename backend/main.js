@@ -21,7 +21,10 @@ app.use(
 );
 
 app.use(express.static(import.meta.dirname + "/public"));
-app.use(express.static(import.meta.dirname + "/uploads/templates"));
+app.use(
+  "/uploads/templates",
+  express.static(import.meta.dirname + "/uploads/templates")
+);
 
 app.use("/api", rootRouter);
 

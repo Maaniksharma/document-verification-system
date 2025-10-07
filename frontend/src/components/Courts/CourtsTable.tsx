@@ -5,7 +5,7 @@ import {
   createCourt,
   fetchCourtsPages,
   type CourtDetail,
-} from "../../api/Court";
+} from "../../api/court";
 import { ActionTypes } from "../../../reducers/AdminDataReducer";
 import useAdmin from "../../hooks/useAdmin";
 import { useCourtTableColumns } from "../../hooks/useCourtTableColumns";
@@ -30,7 +30,6 @@ const CourtsTable: React.FC = () => {
   async function createCourtHandler(courtDetails: CourtDetail) {
     setCreateCourtLoading(true);
     const data = await createCourt(courtDetails);
-    console.log(data);
     if (!data) {
       setCreateCourtLoading(false);
       setOpen(false);

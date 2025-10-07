@@ -26,6 +26,10 @@ const DocRequestSchema = new Schema({
   values: {
     type: [
       {
+        name: {
+          type: String,
+          required: true,
+        },
         data: {
           type: [String],
           required: true,

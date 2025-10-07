@@ -1,6 +1,11 @@
 import { useState } from "react";
 import LoginForm from "../components/LoginPage/LoginForm";
-import { adminLogin, readerLogin, type Credentials } from "../api/auth";
+import {
+  adminLogin,
+  officerLogin,
+  readerLogin,
+  type Credentials,
+} from "../api/auth";
 import useUser from "../hooks/useUser";
 import { ActionTypes } from "../../reducers/UserInfoReducer";
 import { useNavigate } from "react-router-dom";
@@ -36,6 +41,19 @@ const LoginPage: React.FC = () => {
           return;
         }
         redirectUrl = `/reader/${data.id}`;
+        dispatch({
+          type: ActionTypes.LOGIN,
+          payload: { id: data.id, ...credentials },
+        });
+        break;
+      }
+      case "officer": {
+        data = await officerLogin(credentials);
+        if (!data) {
+          setIsLoading(false);
+          return;
+        }
+        redirectUrl = `/officer/${data.id}`;
         dispatch({
           type: ActionTypes.LOGIN,
           payload: { id: data.id, ...credentials },

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import CourtsTable from "../components/Courts/CourtsTable";
 import StatCard from "../components/Courts/StatCard";
-import { fetchAdminStats } from "../api/Court";
+import { fetchAdminStats } from "../api/court";
 
 export interface StatsData {
   totalCourts: number;

@@ -1,5 +1,5 @@
 import { Button, Drawer, Form, Input, Space } from "antd";
-import type { CourtDetail } from "../../api/Court";
+import type { CourtDetail } from "../../api/court";
 
 interface CreateCourtProps {
   open: boolean;

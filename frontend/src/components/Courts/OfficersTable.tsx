@@ -1,5 +1,5 @@
 import { Table } from "antd";
-import { fetchOfficerPages } from "../../api/Court";
+import { fetchOfficerPages } from "../../api/court";
 import { useParams } from "react-router-dom";
 import { useOfficersTableColumns } from "../../hooks/useOfficersTableColumns";
 import { useEffect, useState } from "react";
@@ -12,7 +12,6 @@ const OfficersTable = () => {
   const params = useParams();
   async function getOfficersData(id: string) {
     const { data } = await fetchOfficerPages(currentPage, id);
-    console.log("officerData", data);
     if (!data) {
       setIsLoading(false);
     }

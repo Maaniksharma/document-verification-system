@@ -2,7 +2,10 @@ import { message } from "antd";
 import axiosInstance from "./axiosInstance";
 import { handleAxiosError } from "./generic";
 import { type AxiosProgressEvent } from "axios";
-
+export interface AssignableOfficerData {
+  email: string;
+  id: string;
+}
 export async function fetchDocRequests(readerId: string) {
   try {
     const response = await axiosInstance.get(`/reader/${readerId}/docRequests`);
@@ -74,6 +77,47 @@ export async function createDocument(
     const response = await axiosInstance.post(
       `/reader/${readerId}/docRequests/${docRequestId}/documents`,
       { fieldAndValues: documentData }
+    );
+    return response.data;
+  } catch (e) {
+    handleAxiosError(e);
+  }
+}
+
+export async function fetchDocuments(readerId: string, docRequestId: string) {
+  try {
+    const response = await axiosInstance.get(
+      `/reader/${readerId}/docRequests/${docRequestId}/documents`
+    );
+    return response.data.documents;
+  } catch (e) {
+    handleAxiosError(e);
+  }
+}
+
+export async function fetchAssignableOfficers(readerId: string) {
+  try {
+    const response = await axiosInstance.get(
+      `/reader/${readerId}/assignableOfficers`
+    );
+    return response.data;
+  } catch (e) {
+    handleAxiosError(e);
+  }
+}
+
+export async function assignOfficer(
+  readerId: string,
+  docReqId: string,
+  docId: string,
+  officerId: string
+) {
+  try {
+    const response = await axiosInstance.put(
+      `/reader/${readerId}/docRequests/${docReqId}/documents/${docId}/assignOfficer`,
+      {
+        officerId,
+      }
     );
     return response.data;
   } catch (e) {

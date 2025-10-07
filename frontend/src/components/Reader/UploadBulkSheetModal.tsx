@@ -6,6 +6,8 @@ import type { UploadFile } from "antd/es/upload/interface";
 import { parseExcelFile } from "../../utils/parseExcelFile";
 import { useParams } from "react-router-dom";
 import { createDocument } from "../../api/reader";
+import useReader from "../../hooks/useReader";
+import { ActionTypes } from "../../../reducers/ReaderDataReducer";
 
 interface UploadBulkSheetModalProps {
   triggerOpen: boolean;
@@ -24,6 +26,8 @@ const UploadBulkSheetModal: React.FC<UploadBulkSheetModalProps> = ({
   const [docCreationPercentage, setDocCreationPercentage] = useState(0);
   const documentCreatedRef = useRef(0);
   const params = useParams();
+
+  const { dispatch } = useReader();
 
   useTriggerEffect(triggerOpen, () => {
     setIsModalOpen(true);
@@ -55,16 +59,27 @@ const UploadBulkSheetModal: React.FC<UploadBulkSheetModalProps> = ({
     const totalDocuments = rawDocuments.length;
     await Promise.all(
       rawDocuments.map(async (rawDocument) => {
-        await createDocument(
-          params.id as string,
-          params.reqId as string,
-          rawDocument
-        );
-        await randomDelay();
-        documentCreatedRef.current++;
-        setDocCreationPercentage(
-          (documentCreatedRef.current / totalDocuments) * 100
-        );
+        try {
+          const result = await createDocument(
+            params.id as string,
+            params.reqId as string,
+            rawDocument
+          );
+          await randomDelay();
+          dispatch({
+            type: ActionTypes.ADD_DOCUMENTS,
+            payload: {
+              id: result.id,
+              name: rawDocument.name || rawDocument.Name,
+            },
+          });
+          documentCreatedRef.current++;
+          setDocCreationPercentage(
+            (documentCreatedRef.current / totalDocuments) * 100
+          );
+        } catch (e) {
+          console.log(e);
+        }
       })
     );
     resetModal();

@@ -9,7 +9,14 @@ const OfficersSchema = new Schema({
     type: String,
     required: true,
   },
-  "uploaded-signs": [String],
+  "uploaded-signs": {
+    type: [
+      {
+        createdAt: { type: Date, default: Date.now },
+        path: String,
+      },
+    ],
+  },
   createdAt: { type: Date, default: Date.now },
 });
 

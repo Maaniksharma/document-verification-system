@@ -22,7 +22,7 @@ const courtSchema = new Schema({
   readers: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: "Readers",
-    deafult: [],
+    default: [],
   },
   createdAt: { type: Date, default: Date.now },
 });

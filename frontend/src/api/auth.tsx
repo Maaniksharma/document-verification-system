@@ -27,3 +27,12 @@ export async function readerLogin(credentials: Credentials) {
     handleAxiosError(e);
   }
 }
+export async function officerLogin(credentials: Credentials) {
+  try {
+    const response = await axiosInstance.post("/officer/login", credentials);
+    message.success("login successful");
+    return response.data;
+  } catch (e: unknown) {
+    handleAxiosError(e);
+  }
+}

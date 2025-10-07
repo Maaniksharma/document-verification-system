@@ -10,7 +10,7 @@ import {
 } from "antd";
 import CreateMemberForm from "../components/Courts/CreateMemberForm";
 import type { Credentials } from "../api/auth";
-import { createMember } from "../api/Court";
+import { createMember } from "../api/court";
 import { ActionTypes } from "../../reducers/AdminDataReducer";
 import { useNavigate } from "react-router-dom";
 

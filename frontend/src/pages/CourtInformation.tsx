@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import CourtDetails from "../components/Courts/CourtDetails";
-import { fetchCourtDetails } from "../api/Court";
+import { fetchCourtDetails } from "../api/court";
 import { useParams } from "react-router-dom";
 import MembersDetails from "../components/Courts/MembersDetails";
 

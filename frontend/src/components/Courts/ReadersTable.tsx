@@ -1,7 +1,7 @@
 import { Table } from "antd";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { fetchReaderPages } from "../../api/Court";
+import { fetchReaderPages } from "../../api/court";
 import { useReadersTableColumns } from "../../hooks/useReadersTableColumns";
 
 const ReadersTable = () => {

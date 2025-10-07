@@ -2,6 +2,7 @@ import * as XLSX from 'xlsx';
 
 export function downloadExcelTemplate(headerFields: string[], filename = 'template.xlsx') {
     // Step 1: Create data with header + 5 empty rows
+    headerFields.unshift("Name")
     const data = [
         headerFields,            // Header row
         [], [], [], [], []        // 5 empty rows

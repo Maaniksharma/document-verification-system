@@ -92,7 +92,6 @@ const CreateDocReq: React.FC<CreateDocReqProps> = ({
           layout="vertical"
           id="create-court-form"
           onFinish={(newDocReqDetail) => {
-            console.log("newDocREquest", newDocReqDetail);
             form.resetFields();
             handleSubmit(newDocReqDetail);
           }}

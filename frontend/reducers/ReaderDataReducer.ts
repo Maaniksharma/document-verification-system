@@ -6,7 +6,8 @@ export const enum ActionTypes {
     CREATE_DOC_REQ = "CREATE_DOC_REQ",
     CREATE_DOC = "CREATE_DOC",
     SET_DOCUMENTS = "SET_DOCUMENTS",
-    ADD_DOCUMENTS = "ADD_DOCUMENTS"
+    ADD_DOCUMENTS = "ADD_DOCUMENTS",
+    ASSIGN_OFFICER = "ASSIGN_OFFICER"
 }
 
 export interface ActionType {
@@ -16,12 +17,12 @@ export interface ActionType {
 
 interface ReaderState {
     docRequestPage: DocRequestPageType[],
-    currentDocumentToShow: DocumentPageType[]
+    currentDocumentsToShow: DocumentPageType[]
 }
 
 export const initialState: ReaderState = {
     docRequestPage: [],
-    currentDocumentToShow: []
+    currentDocumentsToShow: []
 }
 
 
@@ -39,12 +40,26 @@ export default function ReaderReducer(state: typeof initialState, action: Action
         }
 
         case (ActionTypes.SET_DOCUMENTS): {
-            return { ...state, currentDocumentToShow: [...action.payload] }
+            return { ...state, currentDocumentsToShow: [...action.payload] }
         }
 
         case (ActionTypes.ADD_DOCUMENTS): {
-            return { ...state, currentDocumentToShow: [...action.payload, ...state.currentDocumentToShow] }
+            return { ...state, currentDocumentsToShow: [{ id: action.payload.id, name: action.payload.name, status: "draft", creationDate: Date.now() }, ...state.currentDocumentsToShow] }
         }
+
+        case ActionTypes.ASSIGN_OFFICER: {
+            const { email, id } = action.payload;
+            const newCurrentDocumentsToShow = state.currentDocumentsToShow.map((doc) => {
+                if (doc.id === id) {
+                    return { ...doc, status: "signature-pending", assignedOfficer: email };
+                }
+                return doc;
+            });
+            console.log(newCurrentDocumentsToShow);
+
+            return { ...state, currentDocumentsToShow: [...newCurrentDocumentsToShow] };
+        }
+
 
         default:
             return state

@@ -2,7 +2,11 @@ import { Breadcrumb, Layout, Menu } from "antd";
 import Header from "../components/Overview/Header";
 import { Outlet, useLocation, Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { PieChartOutlined, FileTextOutlined } from "@ant-design/icons";
+import {
+  PieChartOutlined,
+  FileTextOutlined,
+  SignatureOutlined,
+} from "@ant-design/icons";
 import useUser from "../hooks/useUser";
 
 const { Sider, Content } = Layout;
@@ -42,7 +46,6 @@ const OverviewPage = () => {
       siderEl.removeEventListener("mouseleave", handleMouseLeave);
     };
   }, []);
-
   const menuItems =
     role === "admin"
       ? [
@@ -50,6 +53,19 @@ const OverviewPage = () => {
             key: "/overview/court",
             icon: <PieChartOutlined />,
             label: <Link to="/overview/court">Overview</Link>,
+          },
+        ]
+      : role === "officer"
+      ? [
+          {
+            key: `/officer/${id}`,
+            icon: <FileTextOutlined />,
+            label: <Link to={`/officer/${id}`}>Documents</Link>,
+          },
+          {
+            key: `/officer/${id}/signatures`,
+            icon: <SignatureOutlined />,
+            label: <Link to={`/officer/${id}/signatures`}>Signatures</Link>,
           },
         ]
       : [
@@ -61,9 +77,9 @@ const OverviewPage = () => {
         ];
 
   return (
-    <div className="min-h-screen">
+    <div className="">
       <Header />
-      <Layout style={{ minHeight: "calc(100vh - 64px)" }}>
+      <Layout style={{ minHeight: "calc(100vh)" }}>
         <Sider
           collapsible
           collapsed={collapsed}

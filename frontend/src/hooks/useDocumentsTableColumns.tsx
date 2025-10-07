@@ -1,18 +1,21 @@
-import { type TableProps, type MenuProps, Dropdown, Button } from "antd";
+import { type TableProps, type MenuProps, Dropdown, Button, Tag } from "antd";
 import { formatTimestamp } from "../utils/generic";
-import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { useState } from "react";
 
 export interface DocumentPageType {
   id: string;
   key: string;
   name: string;
   creationDate: string;
-  status: string;
+  status: "draft" | "signature-pending" | "signed";
   assignedOfficer: string;
 }
 
 export const useDocumentsTableColumns = () => {
-  const navigate = useNavigate();
+  const { id, reqId } = useParams();
+  const [triggerModal, setTriggerModal] = useState(false);
+  const [docId, setDocId] = useState<string>("");
 
   const menuItems: MenuProps["items"] = [
     {
@@ -30,12 +33,29 @@ export const useDocumentsTableColumns = () => {
     },
   ];
 
-  const handleMenuClick = (key: string, id: string) => {
+  const handleMenuClick = async (key: string, docId: string) => {
     if (key == "information") {
-      navigate(`docRequests/${id}`);
+      const anchorTag = document.createElement("a");
+      anchorTag.href =
+        import.meta.env.VITE_backend_url +
+        `/api/reader/${id}/docRequests/${reqId}/documents/${docId}/download`;
+      anchorTag.style.display = "none";
+      anchorTag.target = "blank";
+      document.body.appendChild(anchorTag);
+      anchorTag.click();
+      document.body.removeChild(anchorTag);
+    } else if (key == "send") {
+      setDocId(docId);
+      setTriggerModal(!triggerModal);
     } else {
       console.log("Other action:", key);
     }
+  };
+
+  const statusColors = {
+    draft: "gray",
+    "signature-pending": "yellow",
+    signed: "green",
   };
 
   const columns: TableProps<DocumentPageType>["columns"] = [
@@ -60,8 +80,8 @@ export const useDocumentsTableColumns = () => {
       title: <div className="text-center w-full">Creation Date</div>,
       dataIndex: "creationDate",
       key: "creationDate",
-      align: "right",
-      width: 140,
+      align: "center",
+      width: 180,
       ellipsis: true,
       render: (value) => formatTimestamp(value),
     },
@@ -69,38 +89,55 @@ export const useDocumentsTableColumns = () => {
       title: <div className="text-center w-full">Status</div>,
       dataIndex: "status",
       key: "status",
-      align: "right",
-      width: 120,
-      ellipsis: true,
+      align: "center",
+      width: 140,
+      render: (status: DocumentPageType["status"]) => {
+        return (
+          <Tag color={statusColors[status]} key={status}>
+            {status}
+          </Tag>
+        );
+      },
     },
     {
       title: <div className="text-center w-full">Assigned Officer</div>,
       dataIndex: "assignedOfficer",
       key: "assignedOfficer",
-      align: "right",
-      width: 160,
+      align: "center",
+      width: 180,
       ellipsis: true,
+      render: (value) => value || "Unassigned",
     },
     {
       title: <div className="text-center w-full">Actions</div>,
       dataIndex: "actions",
       key: "actions",
       width: 140,
-      render: (_text, record: DocumentPageType) => (
-        <Dropdown
-          menu={{
-            items: menuItems,
-            onClick: ({ key }) => handleMenuClick(key, record.id),
-          }}
-          placement="bottomLeft"
-        >
-          <Button type="text" className="!p-2">
-            <img src="/svg/ellipse.svg" className="w-[16px]" alt="" />
-          </Button>
-        </Dropdown>
-      ),
+      align: "center",
+      render: (_text, record: DocumentPageType) => {
+        const filteredMenu = [...menuItems];
+        if (record.status == "draft") {
+          filteredMenu.splice(2, 0, {
+            key: "send",
+            label: "Send for signature",
+          });
+        }
+        return (
+          <Dropdown
+            menu={{
+              items: filteredMenu,
+              onClick: ({ key }) => handleMenuClick(key, record.id),
+            }}
+            placement="bottomLeft"
+          >
+            <Button type="text" className="!p-2">
+              <img src="/svg/ellipse.svg" className="w-[16px]" alt="" />
+            </Button>
+          </Dropdown>
+        );
+      },
     },
   ];
 
-  return { columns };
+  return { triggerModal, docId, columns };
 };
